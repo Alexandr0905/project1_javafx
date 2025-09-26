@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+
+<Pane prefHeight="640.0" prefWidth="661.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.lab1.HelloController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+
+   <ComboBox fx:id="cmb_figures" layoutX="22.0" layoutY="59.0" prefHeight="33.0" prefWidth="157.0" promptText="Выберите фигуру" />
+   <ColorPicker fx:id="clr" layoutX="198.0" layoutY="59.0" prefHeight="33.0" prefWidth="120.0">
+      <value>
+         <Color />
+      </value></ColorPicker>
+
+   <Canvas fx:id="canvass" accessibleRole="IMAGE_VIEW" height="526.0" layoutX="14.0" layoutY="102.0" width="638.0" />
+   <Button layoutX="502.0" layoutY="59.0" mnemonicParsing="false" onAction="#onClearCanvas" prefHeight="33.0" prefWidth="137.0" text="Очистить" textAlignment="CENTER" />
+   <ComboBox fx:id="type_figures" layoutX="329.0" layoutY="59.0" prefHeight="33.0" prefWidth="157.0" promptText="Выберите тип" />
+   <ToolBar layoutX="22.0" layoutY="10.0" prefHeight="33.0" prefWidth="617.0">
+     <items>
+       <ToggleButton text="Курсор" fx:id="btnCursor"/>
+         <ToggleButton text="Кисть" fx:id="btnBrush"/>
+     </items>
+   </ToolBar>
+
+</Pane>
