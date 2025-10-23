@@ -8,7 +8,7 @@ public class Circle extends Shape {
     private boolean filled;
 
     public Circle(double x, double y, double radius, Color color, boolean filled) {
-        super(x, y, color);
+        super(x, y, color, filled);
         this.radius = radius;
         this.filled = filled;
     }
@@ -31,5 +31,15 @@ public class Circle extends Shape {
         double dx = px - x;
         double dy = py - y;
         return dx * dx + dy * dy <= radius *radius;
+    }
+
+    @Override
+    public String getType() {
+        return "Круг";
+    }
+
+    public double getRadius()
+    {
+        return radius;
     }
 }

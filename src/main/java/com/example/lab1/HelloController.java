@@ -2,6 +2,10 @@ package com.example.lab1;
 
 import com.example.lab1.Tool;
 import com.example.lab1.shapes.*;
+import com.example.lab1.ShapeFactory;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import javafx.fxml.FXML;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
@@ -11,6 +15,10 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.paint.Color;
 
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,40 +103,41 @@ public class HelloController {
 
                 Shape previewShape = null;
 
-                if (selected == null) return;
+                boolean filled = "Заполненный".equals(type_figures.getValue());
+                previewShape = ShapeFactory.createShape(selected, startX, startY, endX, endY, selectedColor, filled);
 
-                switch (selected) {
-                    case "Отрезок" -> {
-                        if (type_selected == "Заполненный") {
-                            previewShape = new Line(startX, startY, endX, endY, selectedColor);
-                        }
-                    }
-                    case "Круг" -> {
-                        double radius = Math.hypot(endX - startX, endY - startY) / 2;
-                        double cx = Math.min(startX, endX);
-                        double cy = Math.min(startY, endY);
-
-                        boolean filled = "Заполненный".equals(type_figures.getValue());
-                        previewShape = new Circle(cx, cy, radius, selectedColor, filled);
-                    }
-                    case "Прямоугольник" -> {
-                        double width = Math.abs(endX - startX);
-                        double height = Math.abs(endY - startY);
-                        double rx = Math.min(startX, endX);
-                        double ry = Math.min(startY, endY);
-
-                        boolean filled = "Заполненный".equals(type_figures.getValue());
-                        previewShape = new Rectangle(rx, ry, width, height, selectedColor, filled);
-                    }
-                    case "Треугольник" -> {
-                        double baseX = Math.min(startX, endX);
-                        double baseY = Math.max(startY, endY);
-                        double width = Math.abs(endX - startX);
-
-                        boolean filled = "Заполненный".equals(type_figures.getValue());
-                        previewShape = new Triangle(startX, startY, baseX, baseY, baseX + width, baseY, selectedColor, filled);
-                    }
-                }
+//                switch (selected) {
+//                    case "Отрезок" -> {
+//                        if (type_selected == "Заполненный") {
+//                            previewShape = new Line(startX, startY, endX, endY, selectedColor);
+//                        }
+//                    }
+//                    case "Круг" -> {
+//                        double radius = Math.hypot(endX - startX, endY - startY) / 2;
+//                        double cx = Math.min(startX, endX);
+//                        double cy = Math.min(startY, endY);
+//
+//                        boolean filled = "Заполненный".equals(type_figures.getValue());
+//                        previewShape = new Circle(cx, cy, radius, selectedColor, filled);
+//                    }
+//                    case "Прямоугольник" -> {
+//                        double width = Math.abs(endX - startX);
+//                        double height = Math.abs(endY - startY);
+//                        double rx = Math.min(startX, endX);
+//                        double ry = Math.min(startY, endY);
+//
+//                        boolean filled = "Заполненный".equals(type_figures.getValue());
+//                        previewShape = new Rectangle(rx, ry, width, height, selectedColor, filled);
+//                    }
+//                    case "Треугольник" -> {
+//                        double baseX = Math.min(startX, endX);
+//                        double baseY = Math.max(startY, endY);
+//                        double width = Math.abs(endX - startX);
+//
+//                        boolean filled = "Заполненный".equals(type_figures.getValue());
+//                        previewShape = new Triangle(startX, startY, baseX, baseY, baseX + width, baseY, selectedColor, filled);
+//                    }
+//                }
 
                 gc.clearRect(0, 0, canvass.getWidth(), canvass.getHeight());
 
@@ -169,7 +178,8 @@ public class HelloController {
 
                 switch (selected) {
                     case "Отрезок" -> {
-                        finalShape = new Line(startX, startY, endX, endY, selectedColor);
+                        boolean filled = false;
+                        finalShape = new Line(startX, startY, endX, endY, selectedColor, filled);
                     }
                     case "Круг" -> {
                         double radius = Math.hypot(endX - startX, endY - startY) / 2;
@@ -214,5 +224,86 @@ public class HelloController {
         GraphicsContext gc = canvass.getGraphicsContext2D();
         gc.clearRect(0, 0, canvass.getWidth(), canvass.getHeight());
         shapes.clear();
+    }
+
+    @FXML
+    protected void onSaveToJson()
+    {
+        List<ShapeData> shapeDataList = new ArrayList<>();
+
+        for (Shape s : shapes)
+        {
+            ShapeData data = new ShapeData();
+            data.type = s.getType();
+            data.color = s.getColor().toString();
+            data.filled = s.isFilled();
+
+            if (s instanceof Line line)
+            {
+                data.x = line.getStartX();
+                data.y = line.getY();
+                data.x2 = line.getEndX();
+                data.y2 = line.getEndY();
+            }
+            else if (s instanceof Circle c) {
+                data.x = c.getX();
+                data.y = c.getY();
+                data.radius = c.getRadius();
+            } else if (s instanceof Rectangle r) {
+                data.x = r.getX();
+                data.y = r.getY();
+                data.width = r.getWidth();
+                data.height = r.getHeight();
+            } else if (s instanceof Triangle t) {
+                data.x = t.getX();
+                data.y = t.getY();
+                data.x2 = t.getX2();
+                data.y2 = t.getY2();
+                data.x3 = t.getX3();
+                data.y3 = t.getY3();
+            }
+            shapeDataList.add(data);
+        }
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        try (FileWriter writer = new FileWriter("shapes.json")) {
+            gson.toJson(shapeDataList, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    protected void onLoadFromJson()
+    {
+        try (FileReader reader = new FileReader("shapes.json"))
+        {
+            Gson gson = new Gson();
+            Type listType = new TypeToken<List<ShapeData>>(){}.getType();
+            List<ShapeData> shapeDataList = gson.fromJson(reader, listType);
+
+            shapes.clear();
+
+            for (ShapeData data : shapeDataList) {
+                Color color = Color.valueOf(data.color);
+                Shape s = null;
+
+                switch (data.type) {
+                    case "Отрезок" -> s = new Line(data.x, data.y, data.x2, data.y2, color, data.filled);
+                    case "Круг" -> s = new Circle(data.x, data.y, data.radius, color, data.filled);
+                    case "Прямоугольник" -> s = new Rectangle(data.x, data.y, data.width, data.height, color, data.filled);
+                    case "Треугольник" -> s = new Triangle(data.x, data.y, data.x2, data.y2, data.x3, data.y3, color, data.filled);
+                }
+
+                if (s != null) shapes.add(s);
+            }
+            // перерисовываем
+            GraphicsContext gc = canvass.getGraphicsContext2D();
+            gc.clearRect(0, 0, canvass.getWidth(), canvass.getHeight());
+            for (Shape s : shapes) s.draw(gc);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

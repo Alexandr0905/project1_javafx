@@ -8,15 +8,21 @@ public abstract class Shape
     protected double x;
     protected double y;
     protected Color color;
+    protected boolean filled;
 
-    public Shape(double x, double y, Color color) {
+    public Shape(double x, double y, Color color, boolean filled) {
         this.x = x;
         this.y = y;
         this.color = color;
+        this.filled = filled;
     }
 
     public Color getColor() {
         return color;
+    }
+
+    public boolean isFilled() {
+        return filled;
     }
 
     public void setColor(Color color) {
@@ -43,4 +49,6 @@ public abstract class Shape
     public abstract void draw(GraphicsContext gc);
 
     public abstract boolean contains(double px, double py);
+
+    public abstract String getType();
 }

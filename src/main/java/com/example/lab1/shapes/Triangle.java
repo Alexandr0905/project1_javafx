@@ -7,8 +7,8 @@ public class Triangle extends Shape {
     private double x2, y2, x3, y3;
     private boolean filled;
 
-    public Triangle(double x1, double y1, double x2, double y2, double x3, double y3, Color color, boolean filled) {
-        super(x1, y1, color);
+    public Triangle(double x, double y, double x2, double y2, double x3, double y3, Color color, boolean filled) {
+        super(x, y, color, filled);
         this.x2 = x2;
         this.y2 = y2;
         this.x3 = x3;
@@ -41,5 +41,27 @@ public class Triangle extends Shape {
         double area3 = Math.abs((x3 - px) * (y - py) - (x - px) * (y3 - py));
 
         return Math.abs(area1 + area2 + area3 - areaOrig) < 0.01;
+    }
+
+    @Override
+    public String getType() {
+        return "Треугольник";
+    }
+
+    public double getX2()
+    {
+        return x2;
+    }
+    public double getY2()
+    {
+        return y2;
+    }
+    public double getX3()
+    {
+        return x3;
+    }
+    public double getY3()
+    {
+        return y3;
     }
 }

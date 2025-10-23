@@ -8,10 +8,11 @@ public class Line extends Shape
     private double x2;
     private double y2;
 
-    public Line(double x, double y, double x2, double y2, Color color) {
-        super(x, y, color);
+    public Line(double x, double y, double x2, double y2, Color color, boolean filled) {
+        super(x, y, color, filled);
         this.x2 = x2;
         this.y2 = y2;
+        this.filled = false; // линия никогда не "залитая"
     }
 
     @Override
@@ -38,5 +39,26 @@ public class Line extends Shape
 
         double distSq = (px - projX) * (px - projX) + (py - projY) * (py - projY);
         return distSq <= 25;
+    }
+
+    @Override
+    public String getType() {
+        return "Отрезок";
+    }
+
+    public double getStartX() {
+        return x;
+    }
+
+    public double getStartY() {
+        return y;
+    }
+
+    public double getEndX() {
+        return x2;
+    }
+
+    public double getEndY() {
+        return y2;
     }
 }

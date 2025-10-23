@@ -22,8 +22,10 @@
    <ComboBox fx:id="type_figures" layoutX="329.0" layoutY="59.0" prefHeight="33.0" prefWidth="157.0" promptText="Выберите тип" />
    <ToolBar layoutX="22.0" layoutY="10.0" prefHeight="33.0" prefWidth="617.0">
      <items>
-       <ToggleButton text="Курсор" fx:id="btnCursor"/>
-         <ToggleButton text="Кисть" fx:id="btnBrush"/>
+       <ToggleButton fx:id="btnCursor" text="Курсор" />
+         <ToggleButton fx:id="btnBrush" text="Кисть" />
+         <Button mnemonicParsing="false" onAction="#onSaveToJson" text="Сохранить в JSON" />
+         <Button mnemonicParsing="false" onAction="#onLoadFromJson" text="Загрузить из JSON" />
      </items>
    </ToolBar>
 

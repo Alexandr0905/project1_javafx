@@ -9,7 +9,7 @@ public class Rectangle extends Shape {
     private boolean filled;
 
     public Rectangle(double x, double y, double width, double height, Color color, boolean filled) {
-        super(x, y, color);
+        super(x, y, color, filled);
         this.width = width;
         this.height = height;
         this.filled = filled;
@@ -31,5 +31,19 @@ public class Rectangle extends Shape {
     public boolean contains(double px, double py) {
         return px >= x && px <= x + width &&
                 py >= y && py <= y + height;
+    }
+
+    @Override
+    public String getType() {
+        return "Прямоугольник";
+    }
+
+    public double getWidth()
+    {
+        return width;
+    }
+    public double getHeight()
+    {
+        return height;
     }
 }
